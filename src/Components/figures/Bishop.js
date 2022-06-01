@@ -14,12 +14,12 @@ export default class Bishop extends Figure {
     const {row, col} = squarePosition;
     const possibleMoves = [];
 
-    for (let i = row + 1, j = col + 1; i < 8; i++, j++) {
-      if (j >= 8) {
+    for (let i = row + 1, j = col + 1; i < squares.length; i++, j++) {
+      if (j >= squares.length) {
         break;
       }
 
-      if (!squares[i][j]) {
+      if (!(squares[i][j] instanceof Figure)) {
         possibleMoves.push([i, j]);
       } else if (squares[i][j].player !== squares[row][col].player) {
         possibleMoves.push([i, j]);
@@ -35,7 +35,7 @@ export default class Bishop extends Figure {
         break;
       }
       
-      if (!squares[i][j]) {
+      if (!(squares[i][j] instanceof Figure)) {
         possibleMoves.push([i, j]);
       } else if (squares[i][j].player !== squares[row][col].player) {
         possibleMoves.push([i, j]);
@@ -47,11 +47,11 @@ export default class Bishop extends Figure {
     }
 
     for (let i = row - 1, j = col + 1; i >= 0; i--, j++) {
-      if (j >= 8) {
+      if (j >= squares.length) {
         break;
       }
       
-      if (!squares[i][j]) {
+      if (!(squares[i][j] instanceof Figure)) {
         possibleMoves.push([i, j]);
       } else if (squares[i][j].player !== squares[row][col].player) {
         possibleMoves.push([i, j]);
@@ -62,12 +62,12 @@ export default class Bishop extends Figure {
       }
     }
 
-    for (let i = row + 1, j = col - 1; i < 8; i++, j--) {
+    for (let i = row + 1, j = col - 1; i < squares.length; i++, j--) {
       if (j < 0) {
         break;
       }
       
-      if (!squares[i][j]) {
+      if (!(squares[i][j] instanceof Figure)) {
         possibleMoves.push([i, j]);
       } else if (squares[i][j].player !== squares[row][col].player) {
         possibleMoves.push([i, j]);
@@ -86,7 +86,7 @@ export default class Bishop extends Figure {
     const possibleMoves = [];
 
     for (let i = row - 1, j = col + 1; i >= 0; i--, j++) {
-      if (j === 8) {
+      if (j === squares.length) {
         break;
       }
 
@@ -115,8 +115,8 @@ export default class Bishop extends Figure {
       }
     }
 
-    for (let i = row + 1, j = col + 1; i < 8; i++, j++) {
-      if (j === 8) {
+    for (let i = row + 1, j = col + 1; i < squares.length; i++, j++) {
+      if (j === squares.length) {
         break;
       }
 
@@ -130,7 +130,7 @@ export default class Bishop extends Figure {
       }
     }
 
-    for (let i = row + 1, j = col - 1; i < 8; i++, j--) {
+    for (let i = row + 1, j = col - 1; i < squares.length; i++, j--) {
       if (j < 0) {
         break;
       }
@@ -144,8 +144,6 @@ export default class Bishop extends Figure {
         break;
       }
     }
-
-    // console.log('Bishop: ', possibleMoves);
 
     return possibleMoves;
   }

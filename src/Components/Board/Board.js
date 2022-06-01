@@ -19,14 +19,33 @@ export default class Board extends Component {
   render() {
     const board = [];
     const squares = this.props.squares;
+    const charA = 'A';
+    const charCodeA = charA.charCodeAt(0);
 
     for (let i = 0; i < squares.length; i++) {
-      const boardRow = []
-      if (i === 0) {
+      const boardRow = [];
+
+      for (let j = 0; j < squares[i].length; j++) {
+        const style = ((i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0)) ? 'white' : 'dark';
+        boardRow.push(this.renderSquare(i, j, style));
+      }
+
+      board.push(
+        <div className='board__row' key={i + 1}>
+          {/* <div className='square'>{i + 1}</div> */}
+          <div className='square'>{i}</div>
+          {boardRow}
+        </div>
+      );
+
+      if (i === squares.length - 1) {
         const numbersRow = [];
+
         for (let x = 0; x < squares.length; x++) {
-          numbersRow.push(<div className='square' key={x}>{x}</div>);
+          // numbersRow.push(<div className='square' key={x + 1}>{String.fromCharCode(x + charCodeA)}</div>);
+          numbersRow.push(<div className='square' key={x + 1}>{x}</div>);
         }
+
         board.push(
           <div className='board__row' key={`${i}_0`}>
             <div className='square'></div>
@@ -34,12 +53,6 @@ export default class Board extends Component {
           </div>
         )
       }
-      for (let j = 0; j < squares[i].length; j++) {
-        const style = ((i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0)) ? 'white' : 'dark';
-        
-        boardRow.push(this.renderSquare(i, j, style));
-      }
-      board.push(<div className='board__row' key={i}><div className='square'>{i}</div>{boardRow}</div>);
     }
 
     return (
