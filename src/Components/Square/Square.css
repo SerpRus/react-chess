@@ -1,0 +1,19 @@
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  border: none;
+  outline: none;
+}
+
+.square--white {
+  background-color: #eaf0ce;
+}
+
+.square--dark {
+  background-color: #bbbe64;
+}
