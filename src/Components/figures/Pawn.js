@@ -14,116 +14,120 @@ export default class Pawn extends Figure {
     }
   }
 
+  checkOpponentFigureForAttack(squares, rowStep, colStep) {
+    if (rowStep < 0 || rowStep > 7 || colStep < 0 || colStep > 7) {
+      return false;
+    }
+
+    return (squares[rowStep][colStep] instanceof Figure) &&
+      squares[rowStep][colStep].player !== this.player;
+  }
+
+  isStartPosition(squarePosition) {
+    return this.startPositions[this.player].find(
+      position => position[0] === squarePosition.row && position[1] === squarePosition.col
+    )
+  }
+
+  checkFegureAhead(squares, rowStep, colStep) {
+    if (rowStep < 0 || rowStep > 7 || colStep < 0 || colStep > 7) {
+      return false;
+    }
+
+    return !(squares[rowStep][colStep] instanceof Figure)
+  }
+
   getPossibleMoves(squares, squarePosition) {
     const {row, col} = squarePosition;
+    const step = {
+      top: row - 1,
+      topDouble: row - 2,
+      right: col + 1,
+      bottom: row + 1,
+      bottomDouble: row + 2,
+      left: col - 1,
+    }
     const possibleMoves = [];
 
     if (this.player === 1) {
-      if (this.startPositions[this.player].find(
-        position => position[0] === row && position[1] === col
-      )) {
-        if ((squares[row + 1][col - 1] instanceof Figure) && squares[row + 1][col - 1].player !== this.player) {
-          possibleMoves.push([row + 1, col -1]);
-        }
+      if (this.checkOpponentFigureForAttack(squares, step.bottom, step.left)) {
+        possibleMoves.push([step.bottom, step.left]);
+      }
 
-        if ((squares[row + 1][col + 1] instanceof Figure) && squares[row + 1][col + 1].player !== this.player) {
-          possibleMoves.push([row + 1, col + 1]);
-        }
+      if (this.checkOpponentFigureForAttack(squares, step.bottom, step.right)) {
+        possibleMoves.push([step.bottom, step.right]);
+      }
 
-        if (!(squares[row + 1][col] instanceof Figure)) {
-          possibleMoves.push([row + 1, col]);
-        } else {
-          return possibleMoves;
-        }
-
-        if (!(squares[row + 2][col] instanceof Figure)) {
-          possibleMoves.push([row + 2, col]);
-        } else {
-          return possibleMoves;
-        }
+      if (this.checkFegureAhead(squares, step.bottom, col)) {
+        possibleMoves.push([step.bottom, col]);
       } else {
-        if ((squares[row + 1][col - 1] instanceof Figure) && squares[row + 1][col - 1].player !== this.player) {
-          possibleMoves.push([row + 1, col -1]);
-        }
+        return possibleMoves;
+      }
 
-        if ((squares[row + 1][col + 1] instanceof Figure) && squares[row + 1][col + 1].player !== this.player) {
-          possibleMoves.push([row + 1, col + 1]);
-        }
-
-        if (!(squares[row + 1][col] instanceof Figure)) {
-          possibleMoves.push([row + 1, col]);
-        } else {
-          return possibleMoves;
+      if (this.isStartPosition(squarePosition)) {
+        if (this.checkFegureAhead(squares, step.bottomDouble, col)) {
+          possibleMoves.push([step.bottomDouble, col]);
         }
       }
-    } else {
-      if (this.startPositions[this.player].find(
-        position => position[0] === row && position[1] === col
-      )) {
-        if ((squares[row - 1][col - 1] instanceof Figure) && squares[row - 1][col - 1].player !== this.player) {
-          possibleMoves.push([row - 1, col -1]);
-        }
 
-        if ((squares[row - 1][col + 1] instanceof Figure) && squares[row - 1][col + 1].player !== this.player) {
-          possibleMoves.push([row - 1, col + 1]);
-        }
-
-        if (!(squares[row - 1][col] instanceof Figure)) {
-          possibleMoves.push([row - 1, col]);
-        } else {
-          return possibleMoves;
-        }
-
-        if (!(squares[row - 2][col] instanceof Figure)) {
-          possibleMoves.push([row - 2, col]);
-        } else {
-          return possibleMoves;
-        }
-      } else {
-        if ((squares[row - 1][col - 1] instanceof Figure) && squares[row - 1][col - 1].player !== this.player) {
-          possibleMoves.push([row - 1, col -1]);
-        }
-
-        if ((squares[row - 1][col + 1] instanceof Figure) && squares[row - 1][col + 1].player !== this.player) {
-          possibleMoves.push([row - 1, col + 1]);
-        }
-
-        if (!(squares[row - 1][col] instanceof Figure)) {
-          possibleMoves.push([row - 1, col]);
-        } else {
-          return possibleMoves;
-        }
-      }
+      return possibleMoves;
     }
 
-    // console.log(possibleMoves);
+    // Если 2-й игрок
+    if (this.checkOpponentFigureForAttack(squares, step.top, step.left)) {
+      possibleMoves.push([step.top, step.left]);
+    }
+
+    if (this.checkOpponentFigureForAttack(squares, step.top, step.right)) {
+      possibleMoves.push([step.top, step.right]);
+    }
+
+    if (this.checkFegureAhead(squares, step.top, col)) {
+      possibleMoves.push([step.top, col]);
+    } else {
+      return possibleMoves;
+    }
+
+    if (this.isStartPosition(squarePosition)) {
+      if (this.checkFegureAhead(squares, step.topDouble, col)) {
+        possibleMoves.push([step.topDouble, col]);
+      }
+    }
 
     return possibleMoves;
   }
 
   getAttackedFigures(squares, squarePosition) {
     const {row, col} = squarePosition;
-    const possibleMoves = [];
-
-    if (this.player === 1) {
-      if (squares[row + 1][col - 1] instanceof Figure && squares[row + 1][col - 1].player !== this.player) {
-        console.log(squares[row + 1][col - 1].player);
-        possibleMoves.push([row + 1, col -1]);
-      }
-
-      if (squares[row + 1][col + 1] instanceof Figure && squares[row + 1][col + 1].player !== this.player) {
-        possibleMoves.push([row + 1, col + 1]);
-      }
-    } else {
-      if (squares[row - 1][col - 1] instanceof Figure && squares[row - 1][col - 1].player !== this.player) {
-        possibleMoves.push([row - 1, col - 1]);
-      }
-
-      if (squares[row - 1][col + 1] instanceof Figure && squares[row - 1][col + 1].player !== this.player) {
-        possibleMoves.push([row - 1, col + 1]);
-      }
+    const attackedFigures = [];
+    const step = {
+      top: row - 1,
+      right: col + 1,
+      bottom: row + 1,
+      left: col - 1,
     }
 
-    return possibleMoves;
+    if (this.player === 1) {
+      if (this.checkOpponentFigureForAttack(squares, step.bottom, step.left)) {
+        attackedFigures.push([step.bottom, step.left]);
+      }
+
+      if (this.checkOpponentFigureForAttack(squares, step.bottom, step.right)) {
+        attackedFigures.push([step.bottom, step.right]);
+      }
+
+      return attackedFigures;
+    }
+
+    // Если 2-й игрок
+    if (this.checkOpponentFigureForAttack(squares, step.top, step.left)) {
+      attackedFigures.push([step.top, step.left]);
+    }
+
+    if (this.checkOpponentFigureForAttack(squares, step.top, step.right)) {
+      attackedFigures.push([step.top, step.right]);
+    }
+
+    return attackedFigures;
   }
 }

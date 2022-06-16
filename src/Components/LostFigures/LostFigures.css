@@ -1,0 +1,24 @@
+.lost-figures {
+  display: flex;
+  flex-wrap: wrap;
+
+  max-width: 384px;
+}
+
+.lost-figure__item {
+  width: 48px;
+  height: 48px;
+}
+
+@media (max-width: 768px) {
+  .lost-figures {
+    padding-bottom: 20px;
+  }
+
+  .lost-figure__item {
+    width: 34px;
+    height: 34px;
+
+    background-size: 34px;
+  }
+}

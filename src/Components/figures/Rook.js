@@ -8,53 +8,88 @@ export default class Rook extends Figure {
         ? 'https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg'
         : 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg'
     );
+
+    this.routes = {
+      top: 'top',
+      right: 'right',
+      bottom: 'bottom',
+      left: 'left',
+    }
   }
 
-  getPossibleMoves(squares, squarePosition) {
-    const {row, col} = squarePosition;
-    const possibleMoves = [];
+  getStep(route) {
+    let rowStep;
+    let colStep;
 
-    for (let i = col + 1; i < 8; i++) {
-      if (!squares[row][i]) {
-        possibleMoves.push([row, i]);
-      } else if (squares[row][i].player !== squares[row][col].player) {
-        possibleMoves.push([row, i]);
-
+    switch (route) {
+      case this.routes.top:
+        rowStep = -1;
+        colStep = 0;
         break;
-      } else {
+      case this.routes.right:
+        rowStep = 0;
+        colStep = 1;
         break;
-      }
+      case this.routes.bottom:
+        rowStep = 1;
+        colStep = 0;
+        break;
+      case this.routes.left:
+        rowStep = 0;
+        colStep = -1;
+        break;
+      default:
+        break;
     }
 
-    for (let i = col - 1; i >= 0; i--) {
-      if (!squares[row][i]) {
-        possibleMoves.push([row, i]);
-      } else if (squares[row][i].player !== squares[row][col].player) {
-        possibleMoves.push([row, i]);
+    return {
+      rowStep: rowStep,
+      colStep: colStep,
+    };
+  }
 
-        break;
-      } else {
-        break;
+  checkYourFigure(squares, row, col) {
+    return (squares[row][col] instanceof Figure) && squares[row][col].player === this.player;
+  }
+
+  checkOpponentFigure(squares, row, col) {
+    return (squares[row][col] instanceof Figure) && squares[row][col].player !== this.player;
+  }
+
+  checkLine(squares, row, col, route, possibleMoves) {
+    const rowStep = this.getStep(route).rowStep;
+    const colStep = this.getStep(route).colStep;
+    
+    for (let i = row + rowStep, j = col + colStep; i < squares.length; i += rowStep, j += colStep) {
+      if (colStep > 0) {
+        if (j >= squares.length) {
+          break;
+        }
+      } 
+
+      if (rowStep > 0) {
+        if (i >= squares.length) {
+          break;
+        }
       }
-    }
 
-    for (let i = row + 1; i < 8; i++) {
-      if (!squares[i][col]) {
-        possibleMoves.push([i, col]);
-      } else if (squares[i][col].player !== squares[row][col].player) {
-        possibleMoves.push([i, col]);
+      if (colStep < 0) {
+        if (j < 0) {
+          break;
+        }
+      } 
 
-        break;
-      } else {
-        break;
+      if (rowStep < 0) {
+        if (i < 0) {
+          break;
+        }
       }
-    }
 
-    for (let i = row - 1; i >= 0; i--) {
-      if (!squares[i][col]) {
-        possibleMoves.push([i, col]);
-      } else if (squares[i][col].player !== squares[row][col].player) {
-        possibleMoves.push([i, col]);
+      if (!(squares[i][j] instanceof Figure)) {
+        possibleMoves.push([i, j]);
+      } else if (squares[i][j].player !== squares[row][col].player) {
+        possibleMoves.push([i, j]);
+  
         break;
       } else {
         break;
@@ -64,52 +99,69 @@ export default class Rook extends Figure {
     return possibleMoves;
   }
 
+  checkAttackLine(squares, row, col, route, possibleMoves) {
+    const rowStep = this.getStep(route).rowStep;
+    const colStep = this.getStep(route).colStep;
+    
+    for (let i = row + rowStep, j = col + colStep; i < squares.length; i += rowStep, j += colStep) {
+      if (colStep > 0) {
+        if (j >= squares.length) {
+          break;
+        }
+      } 
+
+      if (rowStep > 0) {
+        if (i >= squares.length) {
+          break;
+        }
+      }
+
+      if (colStep < 0) {
+        if (j < 0) {
+          break;
+        }
+      } 
+
+      if (rowStep < 0) {
+        if (i < 0) {
+          break;
+        }
+      }
+
+      if (this.checkYourFigure(squares, i, j)) {
+        break;
+      }
+
+      if (this.checkOpponentFigure(squares, i, j)) {
+        possibleMoves.push([i, j]);
+        break;
+      }
+    }
+
+    return possibleMoves;
+  }
+
+  getPossibleMoves(squares, squarePosition) {
+    const {row, col} = squarePosition;
+    let possibleMoves = [];
+
+    for (let route in this.routes) {
+      possibleMoves = this.checkLine(
+        squares, row, col, route, possibleMoves
+      );
+    }
+
+    return possibleMoves;
+  }
+
   getAttackedFigures(squares, squarePosition) {
     const {row, col} = squarePosition;
-    const possibleMoves = [];
+    let possibleMoves = [];
 
-    for (let i = row - 1; i >= 0; i--) {
-      if (squares[i][col] instanceof Figure && squares[i][col].player === this.player) {
-        break;
-      }
-
-      if (squares[i][col] instanceof Figure && squares[i][col].player !== this.player) {
-        possibleMoves.push([i, col]);
-        break;
-      }
-    }
-
-    for (let i = row + 1; i < 8; i++) {
-      if (squares[i][col] instanceof Figure && squares[i][col].player === this.player) {
-        break;
-      }
-
-      if (squares[i][col] instanceof Figure && squares[i][col].player !== this.player) {
-        possibleMoves.push([i, col]);
-        break;
-      }
-    }
-
-    for (let i = col - 1; i >= 0; i--) {
-      if (squares[row][i] instanceof Figure && squares[row][i].player === this.player) {
-        break;
-      }
-
-      if (squares[row][i] instanceof Figure && squares[row][i].player !== this.player) {
-        possibleMoves.push([row, i]);
-        break;
-      }
-    }
-
-    for (let i = col + 1; i < 8; i++) {
-      if (squares[row][i] instanceof Figure && squares[row][i].player === this.player) {
-        break;
-      }
-
-      if (squares[row][i] instanceof Figure && squares[row][i].player !== this.player) {
-        possibleMoves.push([row, i]);
-        break;
-      }
+    for (let route in this.routes) {
+      possibleMoves = this.checkAttackLine(
+        squares, row, col, route, possibleMoves
+      );
     }
 
     return possibleMoves;
