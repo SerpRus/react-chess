@@ -15,8 +15,12 @@ export default class Pawn extends Figure {
   }
 
   checkOpponentFigureForAttack(squares, rowStep, colStep) {
+    if (rowStep < 0 || rowStep > 7 || colStep < 0 || colStep > 7) {
+      return false;
+    }
+
     return (squares[rowStep][colStep] instanceof Figure) &&
-      squares[rowStep][colStep].player !== this.player
+      squares[rowStep][colStep].player !== this.player;
   }
 
   isStartPosition(squarePosition) {
@@ -26,10 +30,12 @@ export default class Pawn extends Figure {
   }
 
   checkFegureAhead(squares, rowStep, colStep) {
+    if (rowStep < 0 || rowStep > 7 || colStep < 0 || colStep > 7) {
+      return false;
+    }
+
     return !(squares[rowStep][colStep] instanceof Figure)
   }
-
-  
 
   getPossibleMoves(squares, squarePosition) {
     const {row, col} = squarePosition;

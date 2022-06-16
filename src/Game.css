@@ -1,3 +1,29 @@
 .game {
   margin: 50px;
 }
+
+.game__board {
+  display: flex;
+}
+
+.game__lost-figures {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 0 20px 48px;
+}
+
+@media (max-width: 768px) {
+  .game {
+    margin: 20px 0 0 0;
+  }
+
+  .game__board {
+    display: block;
+  }
+
+  .game__lost-figures {
+    padding-bottom: 0;
+  }
+}

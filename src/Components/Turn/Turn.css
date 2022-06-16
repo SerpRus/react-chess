@@ -16,3 +16,9 @@
 .turn__square.turn__square--dark {
   background-color: #000;
 }
+
+@media (max-width: 768px) {
+  .turn {
+    margin: 0 0 0 20px;
+  }
+}

@@ -17,3 +17,12 @@
 .square--dark {
   background-color: #bbbe64;
 }
+
+@media (max-width: 768px) {
+  .square {
+    width: 34px;
+    height: 34px;
+
+    background-size: 34px;
+  }
+}
