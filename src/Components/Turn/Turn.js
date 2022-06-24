@@ -1,10 +1,12 @@
 import './Turn.css';
 
-function Turn(props) {
+function Turn({currentTurn}) {
   return (
     <div className="turn">
-      Turn
-      <div className={`turn__square turn__square--${props.currentTurn}`}></div>
+      <div className="turn__content">
+        Ход
+        <div className={`turn__square turn__square--${currentTurn}`}></div>
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import Bishop from '../Components/figures/Bishop';
 import Knight from '../Components/figures/Knight';
 import Rook from '../Components/figures/Rook';
 
-function figureInitialization() {
+const figureInitialization = () => {
   const squaresRow = new Array(8).fill(null);
   const squares = [];
 
@@ -38,23 +38,6 @@ function figureInitialization() {
   squares[0][7] = new Rook(1);
   squares[7][0] = new Rook(2);
   squares[7][7] = new Rook(2);
-
-
-  // 
-  // squares[3][4] = new Pawn(1);
-  // squares[3][6] = new Pawn(1);
-  // squares[4][5] = new Pawn(2);
-  // squares[3][1] = new Pawn(1);
-  // squares[4][0] = new Pawn(2);
-  // squares[4][2] = new Pawn(2);
-  // squares[4][3] = new Rook(1);
-  // squares[5][3] = new Rook(1);
-  // squares[5][4] = new Rook(1);
-  // squares[5][5] = new Rook(1);
-  // squares[4][5] = new Rook(1);
-  // squares[4][4] = new King(2);
-  // 
-
 
   return squares;
 }

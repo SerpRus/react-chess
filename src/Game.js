@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
+
 import './Game.css';
+
 import figureInitialization from './figureInitialization/figureInitialization';
+
 import Board from './Components/Board/Board';
 import Turn from './Components/Turn/Turn';
 import Message from './Components/Message/Message';
 import TransformShapes from './Components/TransformShapes/TransformShapes';
 import LostFigures from './Components/LostFigures/LostFigures';
+
 import Figure from './Components/figures/Figure';
 import King from './Components/figures/King';
 import Queen from './Components/figures/Queen';
@@ -222,13 +226,14 @@ export default class Game extends Component {
   }
 
   handleClick(row, col) {
-    // Если есть победитель, ничего не делаем.
-    if (this.state.winner || this.state.isTransformShape) {
+    const {winner, isTransformShape} = this.state;
+
+    // Если есть победитель, или нужно выбрать новую фигуру ничего не делаем.
+    if (winner || isTransformShape) {
       return;
     }
 
-    const squares = [...this.state.squares];
-    const {currentPlayer, selectedSquarePosition, selectedSquare} = this.state;
+    const {currentPlayer, selectedSquarePosition, selectedSquare, squares} = this.state;
     const squarePosition = {
       row: row,
       col: col,
@@ -242,7 +247,7 @@ export default class Game extends Component {
       // Если выбрано пустое место, или фигура принадлежит оппоненту
       if (!currentSquare || currentSquare.player !== currentPlayer) {
         this.setState({
-          message: `Неправильный выбор. Выберите фигуру ${this.state.currentPlayer} игрока.`,
+          message: `Неправильный выбор. Выберите фигуру ${currentPlayer} игрока.`,
         });
 
         return;
@@ -507,7 +512,8 @@ export default class Game extends Component {
               newPos: {
                 row: row,
                 col: col,
-              }
+              },
+              message: '',
             });
 
             squares[row][col] = selectedFigure;
@@ -631,8 +637,8 @@ export default class Game extends Component {
   }
 
   render() {
-    const squares = [...this.state.squares];
-    const {message, currentPlayer} = this.state;
+    // const squares = [...this.state.squares];
+    const {message, currentPlayer, squares, lostFigures1, lostFigures2, isTransformShape, newPos} = this.state;
 
     return (
       <div className='game'>
@@ -644,19 +650,19 @@ export default class Game extends Component {
 
           <div className='game__lost-figures'>
             <LostFigures
-              lostFigures={this.state.lostFigures1}
+              lostFigures={lostFigures1}
             />
             <LostFigures
-              lostFigures={this.state.lostFigures2}
+              lostFigures={lostFigures2}
             />
           </div> 
         </div>
         
         <TransformShapes
           player={currentPlayer}
-          isShow={this.state.isTransformShape}
+          isShow={isTransformShape}
           onClick={(newFigure) => {
-            this.transformShapeClick(squares, newFigure, this.state.newPos, currentPlayer)
+            this.transformShapeClick(squares, newFigure, newPos, currentPlayer)
           }}
         />
 

@@ -1,5 +1,9 @@
 .turn {
+  display: flex;
+
   margin-top: 20px;
+
+  text-align: center;
 }
 
 .turn__square {
